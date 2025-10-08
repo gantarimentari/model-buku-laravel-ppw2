@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Daftar Buku</h1>
-    
+    <a href="{{ route('buku.create') }}" class="btn btn-primary float-end">Tambah Buku</a>
     <div style="display: flex; gap: 20px; align-items: center;">
         <form action="{{ route('buku.index') }}" method="GET">
             <input type="text" name="kata_kunci" placeholder="Cari judul buku..." value="{{ old('kata_kunci', $kata_kunci) }}">
@@ -41,6 +41,7 @@
                     <th>Penulis</th>
                     <th>Harga</th>
                     <th>Tanggal Terbit</th>
+                    <th>Pengaturan</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +52,15 @@
                     <td>{{ $buku->penulis }}</td>
                     <td>{{ "Rp. " . number_format($buku->harga, 2, ',', '.') }}</td>
                     <td>{{ $buku->tanggal_terbit }}</td>
+                    <td>
+                        <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" >
+                            @csrf
+                            @method('DELETE')
+                            <button onclick="return confirm('yakin mau dihapus?')" type="submit" 
+                            class="btn btn-danger ">Hapus</button>
+                        </form>
+                        <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-warning">Edit</a>
+                        
                 </tr>
                 @endforeach
             </tbody>

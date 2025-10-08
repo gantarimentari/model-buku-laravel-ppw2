@@ -48,4 +48,47 @@ class PostController extends Controller
     {
         return view('halo');
     }
+    public function create(){
+        return view('buku.create');
+    }
+    public function store(){
+        $buku = new Buku();
+        $buku->judul = request('judul');
+        $buku->penulis = request('penulis');
+        $buku->harga = request('harga');
+        $buku->tanggal_terbit = request('tanggal_terbit');
+        $buku->save();
+        return redirect('/buku');
+    }
+    public function destroy($id){
+        $buku =Buku::find($id);
+        $buku->delete();
+        return redirect('/buku');
+    }
+    // app/Http/Controllers/PostController.php
+
+    public function edit(Buku $buku)
+    {
+        // Mengembalikan view 'edit' dan mengirimkan data buku yang dipilih
+        return view('buku.edit', compact('buku'));
+    }
+    public function update(Request $request, $id)
+    {
+        // 1. Validasi data
+        $validatedData = $request->validate([
+            'judul' => 'required|max:255',
+            'penulis' => 'required',
+            'harga' => 'required|numeric',
+            'tanggal_terbit' => 'required|date',
+        ]);
+        
+        // 2. Cari data buku berdasarkan ID
+        $buku = \App\Models\Buku::findOrFail($id);
+        
+        // 3. Update data
+        $buku->update($validatedData);
+
+        // 4. Redirect kembali dengan pesan sukses
+        return redirect()->route('buku.index')->with('success', 'Data buku berhasil diperbarui!');
+    }
 }
